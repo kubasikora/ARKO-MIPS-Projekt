@@ -9,7 +9,6 @@
 prompt: .asciiz "Enter string: \n" 
 error: .asciiz "No sequence found" 
 buf: .space 100
-result: .space 100
 	
 	.text
 	.globl main
