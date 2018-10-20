@@ -1,7 +1,7 @@
 #########################################################
 #                                                       #
-#   	Zamiana ma?ych liter na wielkie                 #
-# 	Autor: mgr. in?. S?awomir Niespodziany          #
+#   	Zamiana malych liter na wielkie                 #
+# 	Autor: mgr. inz. Slawomir Niespodziany          #
 #                                                       #
 #########################################################
 	
@@ -35,12 +35,12 @@ loop:
  	bgt $t4, $t1, next #sprawdz czy znak jest wiekszy od malego z 
  	#brawo, litera jest mala
  	sub $t4, $t4, $t2 # t4 = t4 - t2
-	sb $t4, ($t3) #wstaw wynik w adres z którego pobrales
+	sb $t4, ($t3) #wstaw wynik w adres z ktÃ³rego pobrales
 
 next:
 	addi $t3, $t3, 1 #przejdz o bajt do przodu
 	lb $t4, ($t3) #wczytaj bajt
-	bnez $t4, loop #jesli nie zero, wróc do loop
+	bnez $t4, loop #jesli nie zero, wrÃ³c do loop
  
 end:
 	li $v0, 4 #ustaw numer wywolania systemowego print string
