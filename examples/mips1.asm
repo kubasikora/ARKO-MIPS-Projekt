@@ -1,6 +1,6 @@
 #########################################################
 #                                                       #
-#   	Zastepowanie cyfr ich dope?nieniem              #
+#   	Zastepowanie cyfr ich dopelnieniem              #
 # 	Autor: Jakub Sikora                             #
 #                                                       #
 #########################################################
