@@ -1,6 +1,6 @@
 #########################################################
 #                                                       #
-#   	Wypisywanie najd?u?szego ci?gu cyfr             #
+#   	Wypisywanie najdluzszego ciagu cyfr             #
 # 	Autor: Jakub Sikora                             #
 #                                                       #
 #########################################################
