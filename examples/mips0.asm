@@ -1,3 +1,10 @@
+#########################################################
+#                                                       #
+#   	Zamiana ma?ych liter na wielkie                 #
+# 	Autor: mgr. in?. S?awomir Niespodziany          #
+#                                                       #
+#########################################################
+	
 	.data #sekcja zmiennych globalnych
 prompt: .asciiz "Enter string: \n" #tresc promptu
 buf: .space 100 #bufor na napis

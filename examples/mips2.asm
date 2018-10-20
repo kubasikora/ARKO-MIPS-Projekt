@@ -1,3 +1,10 @@
+#########################################################
+#                                                       #
+#   	Wypisywanie najd?u?szego ci?gu cyfr             #
+# 	Autor: Jakub Sikora                             #
+#                                                       #
+#########################################################
+
 	.data
 prompt: .asciiz "Enter string: \n" 
 error: .asciiz "No sequence found" 

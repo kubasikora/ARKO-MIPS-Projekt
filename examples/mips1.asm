@@ -1,3 +1,10 @@
+#########################################################
+#                                                       #
+#   	Zastepowanie cyfr ich dope?nieniem              #
+# 	Autor: Jakub Sikora                             #
+#                                                       #
+#########################################################
+
 	.data
 prompt: .asciiz "Enter string: \n" 
 buf: .space 100
