@@ -1,14 +1,11 @@
-# Important: do not put any other data before the frameBuffer
-# Also: the Bitmap Display tool must be connected to MARS and set to
-#   display width in pixels: 256
-#   display height in pixels: 256
-#   base address for display: 0x10010000 (static data)
 	.data
-frameBuffer: .space 0x136 
+frameBuffer: .space 0xc0036 
 fout: .asciiz "/home/sikora/Documents/Dev/Arko/ARKO-MIPS-Projekt/test.bmp"      # filename for output
 	.text
 
 la $a0, frameBuffer
+
+########################## HEADER
 
 #BM
 li $t0, 'B'
@@ -24,7 +21,7 @@ li $t0, 0x3a
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-li $t0, 0x01
+li $t0, 0x09
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
@@ -53,7 +50,7 @@ li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-## offset to raster data, gdzie zaczyna sie tablica pikseli
+## offset to raster data, gdzie zaczyna sie tablica pikseli - nie zmieniac
 li $t0, 0x36
 sb $t0, ($a0)
 addiu $a0, $a0, 1
@@ -91,11 +88,11 @@ sb $t0, ($a0)
 addiu $a0, $a0, 1
  
 #width - rozmiar w px
-li $t0, 0x10
+li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-li $t0, 0x00
+li $t0, 0x02
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
@@ -108,11 +105,11 @@ sb $t0, ($a0)
 addiu $a0, $a0, 1
 
 #height - rozmiar w px
-li $t0, 0x10
+li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-li $t0, 0x00
+li $t0, 0x02
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
@@ -133,7 +130,7 @@ li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-#bitcount - 1bit na piksel
+#bitcount - 24 bity na piksel
 li $t0, 0x18
 sb $t0, ($a0)
 addiu $a0, $a0, 1
@@ -164,11 +161,11 @@ li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-li $t0, 0x01
+li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
-li $t0, 0x00
+li $t0, 0x04
 sb $t0, ($a0)
 addiu $a0, $a0, 1
 
@@ -211,23 +208,6 @@ sb $t0, ($a0)
 addiu $a0, $a0, 1
 
 #colors used
-li $t0, 0x01
-sb $t0, ($a0)
-addiu $a0, $a0, 1
-
-li $t0, 0x00
-sb $t0, ($a0)
-addiu $a0, $a0, 1
-
-li $t0, 0x00
-sb $t0, ($a0)
-addiu $a0, $a0, 1
-
-li $t0, 0x00
-sb $t0, ($a0)
-addiu $a0, $a0, 1
-
-#colors importance
 li $t0, 0x00
 sb $t0, ($a0)
 addiu $a0, $a0, 1
@@ -246,14 +226,25 @@ addiu $a0, $a0, 1
 
 ######## TABLE
 
-li $t5, 0x100
-li $t6, 0x46
+li $t5, 0xc0000
+li $t6, 0x18
+li $t7, 0x5e
+li $t8, 0xce
 loop:
+	addiu $a0, $a0, 1
+	sb $t8, ($a0)
+	subiu $t5, $t5, 1
+	
+	addiu $a0, $a0, 1
+	sb $t7, ($a0)
+	subiu $t5, $t5, 1
+	
 	addiu $a0, $a0, 1
 	sb $t6, ($a0)
 	subiu $t5, $t5, 1
 	bnez $t5, loop
 	
+##############################
 
   ###############################################################
   # Open (for writing) a file that does not exist
@@ -270,7 +261,7 @@ loop:
   li   $v0, 15       # system call for write to file
   move $a0, $s6      # file descriptor 
   la   $a1, frameBuffer  # address of buffer from which to write
-  li   $a2, 0x136      # hardcoded buffer length
+  li   $a2, 0xc0036      # hardcoded buffer length
   syscall            # write to file
    
     

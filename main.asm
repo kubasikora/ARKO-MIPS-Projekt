@@ -184,7 +184,6 @@ print_third_point:
 	syscall
 	
 	
-	
 exit:
 	li $v0, 10
 	syscall
