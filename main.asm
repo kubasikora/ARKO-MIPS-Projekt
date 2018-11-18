@@ -11,11 +11,11 @@
 	.data
 #bezier curve data vectors
 .align 4
-x_vect: .space 4096
-y_vect: .space 4096
+x_vect: .space 8192
+y_vect: .space 8192
 
 # file
-frameBuffer: .space 0xc0036 	
+frameBuffer: .space 0xc0036  	
 fout: .asciiz "/home/sikora/Documents/Dev/Arko/ARKO-MIPS-Projekt/arko_mips_project.bmp"      # filename for output
 file_save_start: .asciiz "Creating a bitmap...\n"
 file_save_end: .asciiz "Created arko_mips_project.bmp file!\n"
@@ -37,8 +37,6 @@ ack_terminate: .asciiz ")\n"
 #errors
 invalid_arg_error: .asciiz "ERROR: Invalid pair of coordinates. \n"
 
-
-	.text
 	.text
 	.globl main
 main: 
@@ -163,177 +161,6 @@ print_third_point:
 	li $v0, 4
 	la $a0, ack_terminate
 	syscall
-	
-evaluate_bezier_vectors: #executes (1-t)^3 * x0 + 3*((1-t)^2)*t*x1 + 3*(1-t)*x2*(t^2) + (t^3)*x3	
-	li $t0, 1024 #max
-	li $t1, 1024 #t
-	
-	la $t5, x_vect
-	la $t7, y_vect
-	
-bezier_loop:
-x_vect_evaluate:
-	subiu $t1, $t1, 1
-	move $t2, $s0 #x1 
- 	move $t3, $s2 #x2
-	move $t4, $s4 #x3	
-	li $s1, 3
-	sll $s1, $s1, 10	
-	
-	subu $t6, $t0, $t1 # t-1 
-	sll $t2, $t2, 10 # x1 staloprzecinkowe
-	
-	mulu $t6, $t6, $t6 #kwadrat staloprzecinkowy
-	srl $t6, $t6, 10 #10bitow mniej bo stalo X stalo
-	
-	mulu $t6, $t6, $t1#mnozenie staloprzecinkowych
-	srl $t6, $t6, 10#10bitow mniej bo stalo X stalo
-	
-	mulu $t6, $t6, $t2#mnozenie staloprzecinkowe
-	srl $t6, $t6, 10#20 bit mniej bo doprowadzamy do 
-	
-	mulu $t6, $t6, $s1
-	srl $t6, $t6, 10
-	
-	move $t8, $t6 #dodaj do akumulatora
-	
-	subu $t6, $t0, $t1 # t-1 
-	sll $t3, $t3, 10 # x2 staloprzecinkowe
-	
-	mulu $t6, $t6, $t1
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $t1
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $t3
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $s1
-	srl $t6, $t6, 10
-	
-	addu $t8, $t8, $t6
-	
-	sll $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	addu $t8, $t4, $t8
-	
-	srl $t8, $t8, 10
-	
-	
-	li $v0, 11
-	li $a0, 'x'
-	syscall
-	
-	li $v0, 1
-	move $a0, $t1
-	syscall
-
-	li $v0, 11
-	li $a0, ':'
-	syscall
-
-	li $v0, 1
-	move $a0, $t8
-	syscall
-	
-	li $v0, 11
-	li $a0, '\n'
-	syscall
-	
-	sw $t8, ($t5)
-	addiu $t5, $t5, 4
-	
-y_vect_evaluate:
-	move $t2, $s0 #x1 
- 	move $t3, $s2 #x2
-	move $t4, $s4 #x3	
-	li $s1, 3
-	sll $s1, $s1, 10	
-	
-	subu $t6, $t0, $t1 # t-1 
-	sll $t2, $t2, 10 # x1 staloprzecinkowe
-	
-	mulu $t6, $t6, $t6 #kwadrat staloprzecinkowy
-	srl $t6, $t6, 10 #10bitow mniej bo stalo X stalo
-	
-	mulu $t6, $t6, $t1#mnozenie staloprzecinkowych
-	srl $t6, $t6, 10#10bitow mniej bo stalo X stalo
-	
-	mulu $t6, $t6, $t2#mnozenie staloprzecinkowe
-	srl $t6, $t6, 10#20 bit mniej bo doprowadzamy do 
-	
-	mulu $t6, $t6, $s1
-	srl $t6, $t6, 10
-	
-	move $t8, $t6 #dodaj do akumulatora
-	
-	subu $t6, $t0, $t1 # t-1 
-	sll $t3, $t3, 10 # x2 staloprzecinkowe
-	
-	mulu $t6, $t6, $t1
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $t1
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $t3
-	srl $t6, $t6, 10
-	
-	mulu $t6, $t6, $s1
-	srl $t6, $t6, 10
-	
-	addu $t8, $t8, $t6
-	
-	sll $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	mulu $t4, $t4, $t1
-	srl $t4, $t4, 10
-	
-	addu $t8, $t4, $t8
-	
-	srl $t8, $t8, 10
-	
-	li $v0, 11
-	li $a0, 'y'
-	syscall
-	
-	li $v0, 1
-	move $a0, $t1
-	syscall
-
-	li $v0, 11
-	li $a0, ':'
-	syscall
-
-	li $v0, 1
-	move $a0, $t8
-	syscall
-	
-	li $v0, 11
-	li $a0, '\n'
-	syscall
-	
-	
-	sw $t8, ($t5)
-	addiu $t5, $t5, 4
-	
-	bnez $t1, bezier_loop
 			
 file_creation:
 	li $v0, 4
@@ -342,8 +169,7 @@ file_creation:
 	
 	la $a0, frameBuffer
 
-	########################## HEADER
-
+create_main_header:
 	#BM
 	li $t0, 'B'
 	sb $t0, ($a0)
@@ -404,9 +230,7 @@ file_creation:
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-
-	###############  BITMAPINFOHEADER
-
+create_bitmapinfoheader:
 	#size - DONE - rozmiar nagłówka BITMAPINFOHEADER
 	li $t0, 0x28
 	sb $t0, ($a0)
@@ -429,7 +253,7 @@ file_creation:
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-	li $t0, 0x02
+	li $t0, 0x01
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
@@ -446,7 +270,7 @@ file_creation:
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-	li $t0, 0x02
+	li $t0, 0x01
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
@@ -468,7 +292,7 @@ file_creation:
 	addiu $a0, $a0, 1
 
 	#bitcount - 24 bity na piksel
-	li $t0, 0x18
+	li $t0, 24
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
@@ -498,11 +322,11 @@ file_creation:
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-	li $t0, 0x00
+	li $t0, 0x01
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-	li $t0, 0x04
+	li $t0, 0x00
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
@@ -557,32 +381,262 @@ file_creation:
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
 
-	li $t0, 0x00
+	li $t0, 0x00 
 	sb $t0, ($a0)
 	addiu $a0, $a0, 1
-
-	######## TABLE
-
-	li $t5, 0xc0000
-	li $t6, 0x18
-	li $t7, 0x5e
-	li $t8, 0xce
 	
-loop: #write 3 bytes for one pixel
-	addiu $a0, $a0, 1
-	sb $t8, ($a0)
+background_color:
+	li $t5, 0x30000 #counter
+	li $t6, 0xf4 #R
+	li $t7, 0xa1 #G
+	li $t8, 0xe2 #B
+	
+background_loop: #write 3 bytes for one pixel -- bgr
+	
+	addiu $a0, $a0, 1 #b
+	sb $t8, ($a0) 
 	subiu $t5, $t5, 1
 	
-	addiu $a0, $a0, 1
+	addiu $a0, $a0, 1 #g
 	sb $t7, ($a0)
 	subiu $t5, $t5, 1
 	
-	addiu $a0, $a0, 1
+	addiu $a0, $a0, 1 #r
 	sb $t6, ($a0)
 	subiu $t5, $t5, 1
-	bnez $t5, loop
 	
-  	# Open (for writing) a file that does not exist
+	bnez $t5, background_loop
+	
+			
+draw_bezier_vectors: #executes (1-t)^3 * x0 + 3*((1-t)^2)*t*x1 + 3*(1-t)*x2*(t^2) + (t^3)*x3	
+	li $t0, 1 #max
+	li $t1, 1 #t
+	sll $t0, $t0, 10
+	sll $t1, $t1, 10
+
+bezier_loop:
+	la $a2,  frameBuffer
+	addiu $a2, $a2, 54
+	
+x_vect_evaluate:
+	subiu $t1, $t1, 1
+	move $t2, $s0 #x1 
+	sll $t2, $t2, 10
+ 	move $t3, $s2 #x2
+	sll $t3, $t3, 10
+	move $t4, $s4 #x3
+	sll $t4, $t4, 10	
+	li $s7, 3
+	sll $s7, $s7, 10	
+	
+	subu $t6, $t0, $t1 # t-1 
+	
+	# razy t-1
+	multu $t6, $t6 #kwadrat staloprzecinkowy
+	mflo $t6
+	srl $t6, $t6, 10 #10 bitow mniej bo stalo X stalo
+	
+	# razy t
+	multu $t6, $t1 #mnozenie staloprzecinkowe
+	mflo $t6
+	srl $t6, $t6, 10 #13 bitow mniej bo stalo X stalo
+	
+	# razy x1
+	multu $t6, $t2 #mnozenie staloprzecinkowe
+	mflo $t6
+	srl $t6, $t6, 10 #13  bit mniej bo doprowadzamy do 
+	
+	# razy 3
+	multu $t6, $s7
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# dodaj do x(t)
+	move $t8, $t6
+
+	# t-1 
+	subu $t6, $t0, $t1 # t-1 
+	
+	# razy t
+	multu $t6, $t1
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# razy t
+	multu $t6, $t1
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# razy x2
+	multu $t6, $t3
+	mflo $t6
+	srl $t6, $t6, 10
+	#
+	# razy 3
+	multu $t6, $s7
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# dodaj do x(t)
+	addu $t8, $t8, $t6
+
+	# t
+	# razy x3
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# razy t
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# razy t
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# dodaj do x(t)
+	addu $t8, $t4, $t8
+	
+	# normalizacja x(t)
+	srl $t8, $t8, 10
+	
+	li $a3, 3
+	multu $t8, $a3
+	mflo $t8
+	move $a3, $t8
+	
+y_vect_evaluate:	
+	move $t2, $s1 #y1
+	sll $t2, $t2, 10
+	move $t3, $s3 #y2
+	sll $t3, $t3, 10
+	move $t4, $s5 #y3
+	sll $t4, $t4, 10	
+	li $s7, 3
+	sll $s7, $s7, 10	
+		
+	subu $t6, $t0, $t1 # t-1 
+	
+	# razy t-1
+	multu $t6, $t6 #kwadrat staloprzecinkowy
+	mflo $t6
+	srl $t6, $t6, 10 #10 bitow mniej bo stalo X stalo
+	
+	# razy t
+	multu $t6, $t1 #mnozenie staloprzecinkowe
+	mflo $t6
+	srl $t6, $t6, 10 #13 bitow mniej bo stalo X stalo
+	
+	# razy y1
+	multu $t6, $t2 #mnozenie staloprzecinkowe
+	mflo $t6
+	srl $t6, $t6, 10 #13  bit mniej bo doprowadzamy do 
+	
+	# razy 3
+	multu $t6, $s7
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# dodaj do y(t)
+	move $t8, $t6
+
+
+	# t-1 
+	subu $t6, $t0, $t1 # t-1 
+	
+	# razy t
+	multu $t6, $t1
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# razy t
+	multu $t6, $t1
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# razy y2
+	multu $t6, $t3
+	mflo $t6
+	srl $t6, $t6, 10
+	#
+	# razy 3
+	multu $t6, $s7
+	mflo $t6
+	srl $t6, $t6, 10
+	
+	# dodaj do y(t)
+	addu $t8, $t8, $t6
+	
+	
+	# t
+	# razy x3
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# razy t
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# razy t
+	multu $t4, $t1
+	mflo $t4
+	mfhi $t9
+	bnez $t9, alarm
+	srl $t4, $t4, 10
+	
+	# dodaj do y(t)
+	addu $t8, $t4, $t8
+	
+	# normalizacja y(t)
+	srl $t8, $t8, 10	
+	
+draw_bezier_pixel:	
+	#w a3 x
+	#w t8 y
+	li $t9, 0x300
+	multu $t8, $t9
+	mflo $t8
+	addu $t8, $a3, $t8
+	
+	#w a2 pierwszy pixel
+	addu $a0, $a2, $t8
+	
+	li $t2, 0xff 
+
+
+	sb $t2, ($a0) 
+	subiu $t5, $t5, 1
+	
+	addiu $a0, $a0, 1 #g
+	sb $t2, ($a0)
+	subiu $t5, $t5, 1
+	
+	addiu $a0, $a0, 1 #r
+	sb $t2, ($a0)
+	subiu $t5, $t5, 1
+
+	
+draw_pixel:	
+	addiu $t5, $t5, 4
+	bnez $t1, bezier_loop
+	
+	
+			
+	# Open (for writing) a file that does not exist
   	li   $v0, 13       # system call for open file
   	la   $a0, fout     # output file name
  	li   $a1, 1        # Open for writing (flags are 0: read, 1: write)
@@ -590,19 +644,19 @@ loop: #write 3 bytes for one pixel
  	syscall            # open a file (file descriptor returned in $v0)
  	move $s6, $v0      # save the file descriptor 
   
-  	# Write header to file
+  	# Write buffer to file
  	li   $v0, 15       # system call for write to file
   	move $a0, $s6      # file descriptor 
   	la   $a1, frameBuffer  # address of buffer from which to write
- 	li   $a2, 0xc0036      # hardcoded buffer length
+ 	li   $a2, 0x30036      # hardcoded buffer length
   	syscall            # write to file
    
  	 # Close the file 
  	 li   $v0, 16       # system call for close file
  	 move $a0, $s6      # file descriptor to close
- 	 syscall            # close file
-
-		
+ 	 syscall            # close file			
+					
+							
 exit:
 	li $v0, 4
 	la $a0, file_save_end
@@ -613,6 +667,7 @@ exit:
 	
 	
 invalid_arg_exit:
+alarm:
 	li $v0, 4
 	la $a0, invalid_arg_error
 	syscall
