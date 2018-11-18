@@ -15,8 +15,8 @@ x_vect: .space 8192
 y_vect: .space 8192
 
 # file
-frameBuffer: .space 0xc0036  	
-fout: .asciiz "/home/sikora/Documents/Dev/Arko/ARKO-MIPS-Projekt/arko_mips_project.bmp"      # filename for output
+frameBuffer: .space 0x30036  	
+fout: .asciiz "arko_mips_project.bmp"      # filename for output
 file_save_start: .asciiz "Creating a bitmap...\n"
 file_save_end: .asciiz "Created arko_mips_project.bmp file!\n"
 
